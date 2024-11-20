@@ -11,20 +11,20 @@
         android:layout_width="wrap_content"
         android:layout_height="375dp"
         android:src="@drawable/logonutrii"
-        app:layout_constraintBottom_toTopOf="@id/username"
+        app:layout_constraintBottom_toTopOf="@id/email"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/username"
+        android:id="@+id/email"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:background="@drawable/rounded_edit_text"
-        android:hint="Username"
-        android:inputType="text"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
         android:minHeight="48dp"
         android:padding="16dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -44,7 +44,7 @@
         android:padding="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/username"
+        app:layout_constraintTop_toBottomOf="@id/email"
         app:layout_constraintWidth_percent="0.8" />
 
     <Button
@@ -91,5 +91,15 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/register_account" />
+
+    <ProgressBar
+        android:id="@+id/progressbarofmainactivity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

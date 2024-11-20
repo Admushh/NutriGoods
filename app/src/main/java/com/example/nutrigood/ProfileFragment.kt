@@ -1,10 +1,15 @@
 package com.example.nutrigood
 
+import android.content.Intent
+import android.os.Build.VERSION_CODES.M
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.Dispatchers.Main
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -17,12 +22,18 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class ProfileFragment : Fragment() {
+
+    private lateinit var firebaseAuth: FirebaseAuth // Declare FirebaseAuth instance
+
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        firebaseAuth = FirebaseAuth.getInstance()
+
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
@@ -34,7 +45,25 @@ class ProfileFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false)
+        val view = inflater.inflate(R.layout.fragment_profile, container, false)
+
+        // Find the logout button
+        val logoutButton: Button = view.findViewById(R.id.btn_logout)
+
+        // Set the logout button listener
+        logoutButton.setOnClickListener {
+            // Call the sign out method
+            firebaseAuth.signOut()
+
+            // Redirect to Login screen
+            val intent = Intent(activity, LoginActivity::class.java)
+            startActivity(intent)
+
+            // Optionally finish the current activity if needed
+            activity?.finish()
+        }
+
+        return view
     }
 
     companion object {
