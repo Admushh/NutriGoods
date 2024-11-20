@@ -7,7 +7,8 @@
     android:background="@color/white"
     android:layout_marginTop="150dp">
 
-    <!-- Profile Picture -->
+    <!-- User Name -->
+
     <ImageView
         android:id="@+id/profile_picture"
         android:layout_width="120dp"
@@ -15,67 +16,45 @@
         android:src="@drawable/ic_launcher_foreground"
         android:contentDescription="Profile Picture"
         android:background="@drawable/circle_background"
+
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- User Name -->
+
+    <!-- User Email -->
+
+    <!-- Account Settings Section -->
+
     <TextView
         android:id="@+id/tv_user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="92dp"
+        android:paddingTop="30dp"
         android:text="John Doe"
+        android:textColor="#757575"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:textColor="#000000"
-        app:layout_constraintTop_toBottomOf="@id/profile_picture"
+        app:layout_constraintBaseline_toBottomOf="@+id/profile_picture"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- User Email -->
     <TextView
         android:id="@+id/tv_user_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="johndoe@gmail.com"
-        android:textSize="16sp"
-        android:textColor="#757575"
-        app:layout_constraintTop_toBottomOf="@id/tv_user_name"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <!-- Account Settings Section -->
-    <LinearLayout
-        android:id="@+id/account_settings_section"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:orientation="horizontal"
-        android:padding="16dp"
-        android:background="#FFFFFF"
-        app:layout_constraintTop_toBottomOf="@id/tv_user_email"
-        app:layout_constraintStart_toStartOf="parent"
+        android:text="johndoe@gmail.com"
+        android:textColor="#757575"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintWidth_percent="0.8">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_user_name" />
 
-        <ImageView
-            android:id="@+id/ic_account_settings"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:src="@drawable/ic_launcher_foreground"
-            android:contentDescription="Account Settings" />
 
-        <TextView
-            android:id="@+id/tv_account_settings"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:text="Account Settings"
-            android:textSize="16sp"
-            android:textColor="#000000" />
-    </LinearLayout>
 
     <!-- Logout Button -->
     <Button
@@ -87,11 +66,9 @@
         android:text="Logout"
         android:textAllCaps="false"
         android:textColor="#FFFFFF"
-        app:layout_constraintTop_toBottomOf="@id/account_settings_section"
+        app:layout_constraintTop_toBottomOf="@id/tv_user_email"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintWidth_percent="0.8" />
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
