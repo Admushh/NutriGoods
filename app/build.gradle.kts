@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.storage.CacheResetOnProcessCanceled.enabled
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -7,6 +9,10 @@ plugins {
 android {
     namespace = "com.example.nutrigood"
     compileSdk = 34
+
+  buildFeatures{
+      viewBinding = true
+  }
 
     defaultConfig {
         applicationId = "com.example.nutrigood"

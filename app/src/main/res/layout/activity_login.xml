@@ -47,7 +47,6 @@
         app:layout_constraintTop_toBottomOf="@id/username"
         app:layout_constraintWidth_percent="0.8" />
 
-    <!-- Login Button -->
     <Button
         android:id="@+id/btn_login"
         android:layout_width="200dp"
@@ -63,9 +62,9 @@
         app:layout_constraintTop_toBottomOf="@id/password"
         app:layout_constraintWidth_percent="0.8" />
 
-    <!-- Register Account Text -->
 
-    <!-- About Us Text -->
+
+
 
     <TextView
         android:id="@+id/register_account"

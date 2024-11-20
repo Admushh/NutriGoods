@@ -1,20 +1,32 @@
 package com.example.nutrigood
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 
 class Register : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_register)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+
+        // Mendapatkan referensi ke Spinner setelah setContentView
+        val spinnerDiabetes: Spinner = findViewById(R.id.spinner_diabetes)
+
+        // Mengambil array pilihan dari resources
+        val diabetesOptions = resources.getStringArray(R.array.diabetes_options)
+
+        // Membuat ArrayAdapter untuk Spinner
+        val adapter = ArrayAdapter<String>(
+            this,
+            android.R.layout.simple_spinner_item, // Layout untuk item spinner
+            diabetesOptions
+        )
+
+        // Mengatur layout dropdown
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+        // Menetapkan adapter ke spinner
+        spinnerDiabetes.adapter = adapter
     }
 }
