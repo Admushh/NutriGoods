@@ -1,59 +1,80 @@
 package com.example.nutrigood
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import com.data.response.Product
+import com.data.retrofit.ApiConfig
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [FormFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class FormFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var etProductName: EditText
+    private lateinit var etSugarContent: EditText
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_form, container, false)
+        val binding = inflater.inflate(R.layout.fragment_form, container, false)
+
+        etProductName = binding.findViewById(R.id.et_product_name)
+        etSugarContent = binding.findViewById(R.id.et_sugar_content)
+
+        val btnSaveProduct = binding.findViewById<View>(R.id.btn_save_product)
+        btnSaveProduct.setOnClickListener {
+            saveProduct()
+        }
+
+        return binding
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment FormFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            FormFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    private fun saveProduct() {
+        val productName = etProductName.text.toString().trim()
+        val sugarContentText = etSugarContent.text.toString().trim()
+
+        if (productName.isEmpty() || sugarContentText.isEmpty()) {
+            Toast.makeText(requireContext(), "Harap lengkapi semua kolom", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val sugarContent = sugarContentText.toDoubleOrNull()
+        if (sugarContent == null) {
+            Toast.makeText(requireContext(), "Kandungan gula harus berupa angka", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // Siapkan data produk
+        val product = Product(namaProduct = productName, valueProduct = sugarContent)
+
+        // Ambil token (ganti dengan implementasi pengambilan token Anda)
+        val token = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjkyODg2OGRjNDRlYTZhOThjODhiMzkzZDM2NDQ1MTM2NWViYjMwZDgiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vbG9naW4tcmVnaXN0ZXItbnV0cmlnb29kIiwiYXVkIjoibG9naW4tcmVnaXN0ZXItbnV0cmlnb29kIiwiYXV0aF90aW1lIjoxNzMyNTU5ODE4LCJ1c2VyX2lkIjoiZEY2bFZkVU9YaFdLUmU2allLUFFMN2NRa2FmMSIsInN1YiI6ImRGNmxWZFVPWGhXS1JlNmpZS1BRTDdjUWthZjEiLCJpYXQiOjE3MzI1NTk4MTgsImV4cCI6MTczMjU2MzQxOCwiZW1haWwiOiJhZGltYXMuZmFyaGFuLnB1dHJhbnRvLnRpazIyQG1oc3cucG5qLmFjLmlkIiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJmaXJlYmFzZSI6eyJpZGVudGl0aWVzIjp7ImVtYWlsIjpbImFkaW1hcy5mYXJoYW4ucHV0cmFudG8udGlrMjJAbWhzdy5wbmouYWMuaWQiXX0sInNpZ25faW5fcHJvdmlkZXIiOiJwYXNzd29yZCJ9fQ.GilKt0aP8z5SBC05PCXFB_2g4XGQA0w54EyVZXhwd_ALdLp3eDAMOCErU56Aq9UIj7ee_wpxIt0W5EshmAZCb-mXTmlE8nldx2TzCKqSkAuBAUwC1ZDO5h4GmcJpQAsJvfWZkjfHSXMBF45-2h9glU8vebQiP8zdfzfaFll-vxdQ8G55fVPwXC9p6L-jK-D8-XMbdR6uR3s4lFsuxE1LOeyc8JARRdIa9B4nl_avbFPRjDXneA9alZ3hwdpWh3edIvCjF97NaScDPbFc8KSwdOLyLVQq1lBS6woGjyGFEEMcEOTPNvrY4NwQGpRxhM7Xjaqpn9pYJJlQEIbQuFlfLg" // Simpan token setelah login
+
+
+        val apiService = ApiConfig.getApiService(token)
+        apiService.addProduct(product).enqueue(object : Callback<Product> {
+            override fun onResponse(call: Call<Product>, response: Response<Product>) {
+                if (response.isSuccessful) {
+                    Toast.makeText(requireContext(), "Produk berhasil disimpan", Toast.LENGTH_SHORT).show()
+                    // Reset form setelah berhasil
+                    etProductName.text.clear()
+                    etSugarContent.text.clear()
+                } else {
+                    // Tampilkan pesan error dari server jika ada
+                    val errorMessage = response.errorBody()?.string() ?: "Gagal menyimpan produk"
+                    Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
                 }
             }
+
+            override fun onFailure(call: Call<Product>, t: Throwable) {
+                Toast.makeText(requireContext(), "Terjadi kesalahan jaringan: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 }
