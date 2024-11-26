@@ -4,11 +4,14 @@ package com.example.nutrigood
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.data.response.Product
 
-class ProductAdapter : androidx.recyclerview.widget.RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
+class ProductAdapter(
+    private val onDeleteClick: (Product) -> Unit // Callback untuk tombol Delete
+) : RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
 
     private val productList = mutableListOf<Product>()
 
@@ -34,10 +37,16 @@ class ProductAdapter : androidx.recyclerview.widget.RecyclerView.Adapter<Product
     inner class ProductViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val tvName: TextView = itemView.findViewById(R.id.tv_product_name)
         private val tvSugarContent: TextView = itemView.findViewById(R.id.tv_sugar_content)
+        private val btnDelete: Button = itemView.findViewById(R.id.btn_delete)
 
         fun bind(product: Product) {
             tvName.text = product.namaProduct
             tvSugarContent.text = "Sugar: ${product.valueProduct} g"
+
+            // Handle tombol Delete
+            btnDelete.setOnClickListener {
+                onDeleteClick(product)
+            }
         }
     }
 }
