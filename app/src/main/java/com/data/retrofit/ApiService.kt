@@ -12,6 +12,7 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Path
 import com.data.response.UserDetailsResponse
+import retrofit2.http.DELETE
 
 interface ApiService {
     // Endpoint untuk registrasi pengguna
@@ -44,4 +45,11 @@ interface ApiService {
     fun getProducts(
         @Header("Authorization") token: String
     ): Call<ProductResponse>
+
+    @DELETE("products/{id}")
+    fun deleteProduct(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int
+    ): Call<Void>
+
 }
