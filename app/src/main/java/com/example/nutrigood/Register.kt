@@ -70,10 +70,6 @@ class Register : AppCompatActivity() {
 
     private fun registerUser(user: User) {
         val apiService = ApiConfig.getApiService()
-
-        // Log data yang dikirim untuk debugging
-        Log.d("RegisterPayload", "Payload: $user")
-
         apiService.registerUser(user).enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {
@@ -81,18 +77,21 @@ class Register : AppCompatActivity() {
                     startActivity(Intent(this@Register, Login::class.java))
                     finish()
                 } else {
-                    Toast.makeText(
-                        this@Register,
-                        "Failed to register: ${response.message()}",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    // Menangani respons error dari server
+                    if (response.code() == 409) {
+                        // Konflik: User sudah ada
+                        Toast.makeText(this@Register, "User already exists. Please log in.", Toast.LENGTH_SHORT).show()
+                    } else {
+                        // Pesan default untuk error lainnya
+                        Toast.makeText(this@Register, "Failed to register: ${response.message()}", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
 
             override fun onFailure(call: Call<Void>, t: Throwable) {
                 Toast.makeText(this@Register, "Network error: ${t.message}", Toast.LENGTH_SHORT).show()
-                Log.e("RegisterError", "Network error: ${t.message}")
             }
         })
     }
+
 }
