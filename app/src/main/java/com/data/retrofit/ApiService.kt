@@ -1,19 +1,41 @@
 package com.data.retrofit
 
+import com.data.response.LoginRequest
+import com.data.response.LoginResponse
 import com.data.response.Product
+import com.data.response.User
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Path
+import com.data.response.UserDetailsResponse
 
 interface ApiService {
+    // Endpoint untuk registrasi pengguna
+    @POST("users/register")
+    fun registerUser(@Body user: User): Call<Void>
+
+    // Endpoint untuk login pengguna
+    @POST("users/login")
+    fun loginUser(@Body loginRequest: LoginRequest): Call<LoginResponse>
+
+    @GET("users/details")
+    fun getUserDetails(@Header("Authorization") token: String): Call<UserDetailsResponse>
+
+
+    // Endpoint untuk menambahkan produk (autentikasi diperlukan)
     @POST("products")
-    fun addProduct(@Body product: Product): Call<Product>
+    fun addProduct(
+        @Header("Authorization") token: String, // Menyisipkan token JWT di header
+        @Body product: Product
+    ): Call<Product>
 
-    @GET("events/{id}")
-    fun getProduct(@Path("id") id: Int): Call<Product>
-
+    // Endpoint untuk mendapatkan detail produk (autentikasi diperlukan)
+    @GET("products/{id}")
+    fun getProduct(
+        @Header("Authorization") token: String, // Menyisipkan token JWT di header
+        @Path("id") id: Int
+    ): Call<Product>
 }
-
