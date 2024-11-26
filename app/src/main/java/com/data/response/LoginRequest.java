@@ -12,10 +12,5 @@ public class LoginRequest {
         return email;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
     // Getter and Setter
 }
-

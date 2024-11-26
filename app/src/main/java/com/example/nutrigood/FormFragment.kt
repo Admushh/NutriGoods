@@ -1,28 +1,38 @@
 package com.example.nutrigood
 
 import android.content.Context
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.fragment.app.Fragment
 import com.data.response.Product
 import com.data.retrofit.ApiConfig
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import kotlin.text.isEmpty
 import kotlin.text.toDoubleOrNull
 import kotlin.text.trim
 
-class FormFragment : androidx.fragment.app.Fragment() {
+class FormFragment : Fragment() {
 
-    private lateinit var etProductName: android.widget.EditText
-    private lateinit var etSugarContent: android.widget.EditText
+    private lateinit var etProductName: EditText
+    private lateinit var etSugarContent: EditText
 
     override fun onCreateView(
-        inflater: android.view.LayoutInflater, container: android.view.ViewGroup?,
-        savedInstanceState: android.os.Bundle?
-    ): android.view.View? {
-        val binding = inflater.inflate(com.example.nutrigood.R.layout.fragment_form, container, false)
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val binding = inflater.inflate(R.layout.fragment_form, container, false)
 
-        etProductName = binding.findViewById(com.example.nutrigood.R.id.et_product_name)
-        etSugarContent = binding.findViewById(com.example.nutrigood.R.id.et_sugar_content)
+        etProductName = binding.findViewById(R.id.et_product_name)
+        etSugarContent = binding.findViewById(R.id.et_sugar_content)
 
-        val btnSaveProduct = binding.findViewById<android.view.View>(com.example.nutrigood.R.id.btn_save_product)
+        val btnSaveProduct = binding.findViewById<View>(R.id.btn_save_product)
         btnSaveProduct.setOnClickListener {
             saveProduct()
         }
@@ -35,39 +45,42 @@ class FormFragment : androidx.fragment.app.Fragment() {
         val sugarContentText = etSugarContent.text.toString().trim()
 
         if (productName.isEmpty() || sugarContentText.isEmpty()) {
-            android.widget.Toast.makeText(requireContext(), "Harap lengkapi semua kolom", android.widget.Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Harap lengkapi semua kolom", Toast.LENGTH_SHORT).show()
             return
         }
 
         val sugarContent = sugarContentText.toDoubleOrNull()
         if (sugarContent == null) {
-            android.widget.Toast.makeText(requireContext(), "Kandungan gula harus berupa angka", android.widget.Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Kandungan gula harus berupa angka", Toast.LENGTH_SHORT).show()
             return
         }
 
-        val product =
-            com.data.response.Product(namaProduct = productName, valueProduct = sugarContent)
+        // Ambil waktu sekarang sebagai createdAt
+        val createdAt = java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss", java.util.Locale.getDefault()).format(java.util.Date())
 
-        val sharedPreferences = requireActivity().getSharedPreferences("auth", android.content.Context.MODE_PRIVATE)
+        // Buat objek Product
+        val product = Product(namaProduct = productName, valueProduct = sugarContent, createdAt = createdAt)
+
+        val sharedPreferences = requireActivity().getSharedPreferences("auth", Context.MODE_PRIVATE)
         val token = sharedPreferences.getString("token", "") ?: ""
 
         val apiService = ApiConfig.getApiService()
-        apiService.addProduct("Bearer $token", product).enqueue(object :
-            retrofit2.Callback<com.data.response.Product> {
-            override fun onResponse(call: retrofit2.Call<com.data.response.Product>, response: retrofit2.Response<com.data.response.Product>) {
+        apiService.addProduct("Bearer $token", product).enqueue(object : Callback<Product> {
+            override fun onResponse(call: Call<Product>, response: Response<Product>) {
                 if (response.isSuccessful) {
-                    android.widget.Toast.makeText(requireContext(), "Product saved successfully", android.widget.Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Product saved successfully", Toast.LENGTH_SHORT).show()
                     // Reset input setelah berhasil
                     etProductName.text.clear()
                     etSugarContent.text.clear()
                 } else {
-                    android.widget.Toast.makeText(requireContext(), "Failed to save product: ${response.message()}", android.widget.Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Failed to save product: ${response.message()}", Toast.LENGTH_SHORT).show()
                 }
             }
 
-            override fun onFailure(call: retrofit2.Call<com.data.response.Product>, t: Throwable) {
-                android.widget.Toast.makeText(requireContext(), "Network error: ${t.message}", android.widget.Toast.LENGTH_SHORT).show()
+            override fun onFailure(call: Call<Product>, t: Throwable) {
+                Toast.makeText(requireContext(), "Network error: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
     }
+
 }

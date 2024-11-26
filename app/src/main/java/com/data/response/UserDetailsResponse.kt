@@ -1,6 +1,8 @@
 package com.data.response
 
+import com.google.gson.annotations.SerializedName
+
 data class UserDetailsResponse(
-    @com.google.gson.annotations.SerializedName("username") val username: String?,
-    @com.google.gson.annotations.SerializedName("email") val email: String?
+    @SerializedName("username") val username: String?,
+    @SerializedName("email") val email: String?
 )
