@@ -3,6 +3,7 @@ package com.data.retrofit
 import com.data.response.LoginRequest
 import com.data.response.LoginResponse
 import com.data.response.Product
+import com.data.response.ProductResponse
 import com.data.response.User
 import retrofit2.Call
 import retrofit2.http.Body
@@ -38,4 +39,9 @@ interface ApiService {
         @Header("Authorization") token: String, // Menyisipkan token JWT di header
         @Path("id") id: Int
     ): Call<Product>
+
+    @GET("products")
+    fun getProducts(
+        @Header("Authorization") token: String
+    ): Call<ProductResponse>
 }

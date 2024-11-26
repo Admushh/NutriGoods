@@ -51,7 +51,11 @@ class FormFragment : Fragment() {
             return
         }
 
-        val product = Product(namaProduct = productName, valueProduct = sugarContent)
+        // Ambil waktu sekarang sebagai createdAt
+        val createdAt = java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss", java.util.Locale.getDefault()).format(java.util.Date())
+
+        // Buat objek Product
+        val product = Product(namaProduct = productName, valueProduct = sugarContent, createdAt = createdAt)
 
         val sharedPreferences = requireActivity().getSharedPreferences("auth", Context.MODE_PRIVATE)
         val token = sharedPreferences.getString("token", "") ?: ""
@@ -74,4 +78,5 @@ class FormFragment : Fragment() {
             }
         })
     }
+
 }
